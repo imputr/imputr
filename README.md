@@ -18,7 +18,7 @@ pip install imputr
 
 ## AutoImputer
 
-We will start with the simplest usage of the AutoImputer (our recommended workflow for newbies and intermediates), which by default automatically imputes all the missing values with a modern version of the [missForest](https://arxiv.org/pdf/1105.0828.pdf) algorithm.
+We will start with the simplest usage of the AutoImputer (our recommended workflow for newbies and intermediates), which by default automatically imputes the missing values for all columns with a modern version of the [missForest](https://arxiv.org/pdf/1105.0828.pdf) algorithm.
 
 ```python
 from imputr.autoimputer import AutoImputer
@@ -38,30 +38,54 @@ In short, the following steps are executed under the hood when the imputr code i
 
 1. Make a deep copy of the given dataframe
 2. Classify column types based on name, frequencies and data type into: continuous, categorical or datetime
-3. Determine random forest depths for each column with [heuristic](http://linktopseudocodereadthedocs.io) algorithm
-4. Apply missForest algorithm: starting with the column with least missing values as target, temporarily impute other columns with mean/mode and train random forest to impute target. Iterate from left to right.
-5. Log all imputations as tuple in new auxiliary column.
+3. Determine execution order for imputation. Start with the column with the least missing values as target and end at the column with most missing values.
+4. Determine random forest depths for each column with [heuristic](http://linktopseudocodereadthedocs.io) algorithm
+5. Apply missForest algorithm for all columns: iteratively take the target columns from the execution order, temporarily impute other (unimputed) columns with mean/mode and train random forest to impute target. Iterate until converged.
+6. Log all imputations as tuple in new auxiliary column.
 
 ←——- This will be a GIF showing iterative column imputation ——→ 
 
 To see what else be done with the AutoImputer API to customise its behaviour, reference our [documentation](http://readthedocs.io).
 
-## SimpleImputer
+## BaseImputer
 
-Next we will use the SimpleImputer to show a bit 
+Next we will use the BaseImputer to show a how we can construct a more complex imputation workflow.
 
 ```python
-from imputr.autoimputer import AutoImputer
+from imputr.autoimputer import BaseImputer
 import pandas as pd
 
 # Import dataset into Pandas DataFrame
 df = pd.read_csv("example.csv")
 
-# Initialize AutoImputer with data - set exec_now=False to delay imputation 
-imputer = AutoImputer(data=df)
+# Initialize BaseImputer with data
+imputer = BaseImputer(data=df,
+                      include_target_columns = ['age', 'gender', 'income'],
+                      column_types = {
+                        'age' : 'continuous'
+                      }
+                      impute_strategies = {
+                        'age': 'ndist',
+                        'income: 'kde'
+                        },
+                      impute_order = ['income', 'gender']
+                      )
 
 # Retrieve imputed dataset from AutoImputer object
 imputed_df = imputer.get_result()
+```
+This code will use the user's input as main source of truth, but will still contain automated parts that the user did not give explicitly to the imputer. In short, it will:
+
+1. Make a deep copy like previous code block
+2. Classify columns for 'gender' and 'income', as 'age' was already given by the user.
+3. Deteremine execution order for imputation. The order will be ('age', 'income', 'gender') as the 'ndist' (normal distrbution) impute strategy is univariate, and is therefore best done before other columns. 
+
+The rest is analogous to the example given above.
+
+If for some reason you want to put a univariate imputation after a multivariate imputation one, you must explicitly give the order for it, e.g.:
+
+```python
+impute_order = ['income', 'gender', 'age']
 ```
 
 # 📕 Documentation
@@ -69,7 +93,7 @@ imputed_df = imputer.get_result()
 Multiple links to documentation:
 
 - Imputer API
-- strategies
+- strategies and coneptds: univariate, multivariate, time series, exec order
 - column inference techniques
 
 blogs
