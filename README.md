@@ -49,7 +49,7 @@ To see what else be done with the AutoImputer API to customise its behaviour, re
 
 ## BaseImputer
 
-Next we will use the BaseImputer to show a how we can construct a more complex imputation workflow.
+Next we will use the BaseImputer to show a how we can construct a more custom imputation workflow.
 
 ```python
 from imputr.autoimputer import BaseImputer
@@ -105,8 +105,6 @@ latest release
 more real world examples
 
 # 👨🏽‍💻 Contribution
-
-We don’t believe in the notion of a “rockstar” - it resembles a single entity that gains all attention from moving fast. Instead, we believe in the “xxxxx”, who understands that the future is built together with other xxxx.
 
 The core contribution team built ImputR based on extensive research, benchmark tests and numerous interviews with the end users of the library. We are always looking for other xxxx’s who would like to share with the community:
 
