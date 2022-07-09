@@ -17,7 +17,7 @@ class DataType(Enum):
     enumertions for discrete, discrete-ordinal and a separate datetime type.
     """
     
-    CATEGORICALf = 1,
+    CATEGORICAL = 1,
     CONTINUOUS = 2
 
 def _infer_data_type(column: pd.Series) -> DataType:
