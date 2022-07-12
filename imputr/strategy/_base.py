@@ -97,13 +97,5 @@ class _BaseStrategy(ABC):
         """
         return self._strategy_abbrevation
 
-    @property
-    @abstractmethod
-    def strategy_name(self) -> str:
-        """Full name of strategy.
-
-        Returns
-        -------
-        str : Full name of strategy.
-        """
+    def __str__(self) -> str:
         return self._strategy_name
