@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
-
 import pandas as pd
 
+from .. import Column
 
 class _BaseStrategy(ABC):
     """Abstract base class for strategy classes.
@@ -23,11 +22,22 @@ class _BaseStrategy(ABC):
         A strategy object that implements an imputation strategy.
     """
 
-    index: int
+    target_column: Column
+    feature_columns: list[Column]
 
-    def __init__(self, data, index):
-        self.data = data
-        self.index = index
+    def __init__(self, 
+                 target_column: Column, 
+                 feature_columns: list[Column]):
+        self.target_column = target_column     
+        self.feature_columns = feature_columns
+           
+    @classmethod   
+    @abstractmethod
+    def from_dict(cls, 
+                  target_column: Column, 
+                  feature_columns: list[Column],
+                  **kwargs: dict):
+        return
 
     @abstractmethod
     def fit(self) -> None:
@@ -57,45 +67,50 @@ class _BaseStrategy(ABC):
         """
         return
 
-    @abstractmethod
-    def impute_single(self, row: pd.Series) -> pd.Series:
-        """Runs imputer strategy on a single row of a table.
+    # @abstractmethod
+    # def impute_single(self, row: pd.Series) -> pd.Series:
+    #     """Runs imputer strategy on a single row of a table.
 
-        This method fills the missing value with its own strategy.
+    #     This method fills the missing value with its own strategy.
 
-        Parameters
-        ----------
-        data : pd.DataFrame
-            A Pandas DataFrame that needs imputation for the target column for
-            which this imputation strategy is trained. Expects no missing values in the
-            non-target columns.
+    #     Parameters
+    #     ----------
+    #     data : pd.DataFrame
+    #         A Pandas DataFrame that needs imputation for the target column for
+    #         which this imputation strategy is trained. Expects no missing values in the
+    #         non-target columns.
 
-        Returns
-        -------
-        pd.Series : The Pandas Series that contains the imputed value.
-        """
-        return
+    #     Returns
+    #     -------
+    #     pd.Series : The Pandas Series that contains the imputed value.
+    #     """
+    #     return
 
-    @abstractmethod
-    def info(self) -> str:
-        """Gets textual description of the imputer strategy.
+    # @abstractmethod
+    # def info(self) -> str:
+    #     """Gets textual description of the imputer strategy.
 
-        Returns
-        -------
-        str : Textual description of the imputer strategy.
-        """
-        return
+    #     Returns
+    #     -------
+    #     str : Textual description of the imputer strategy.
+    #     """
+    #     return
 
-    @property
-    @abstractmethod
-    def strategy_identifier(self) -> str:
-        """Abbreviation of strategy name that functions as identifier.
+    # @property
+    # @abstractmethod
+    # def strategy_identifier(self) -> str:
+    #     """Abbreviation of strategy name that functions as identifier.
 
-        Returns
-        -------
-        str : Identifier of strategy.
-        """
-        return self._strategy_abbrevation
+    #     Returns
+    #     -------
+    #     str : Identifier of strategy.
+    #     """
+    #     return self._strategy_abbrevation
+    
+    # @property
+    # @abstractmethod
+    # def supported_data_types(self) -> list:
+    #     return
 
-    def __str__(self) -> str:
-        return self._strategy_name
+    # def __str__(self) -> str:
+    #     return self._strategy_name

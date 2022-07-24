@@ -1,0 +1,10 @@
+{
+	"settings": {
+		"jupyter.debugJustMyCode": false
+	},
+	"folders": [
+		{
+			"path": "."
+		}
+	]
+}
