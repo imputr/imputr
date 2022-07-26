@@ -23,20 +23,23 @@ class _BaseStrategy(ABC):
     """
 
     target_column: Column
-    feature_columns: list[Column]
 
     def __init__(self, 
-                 target_column: Column, 
-                 feature_columns: list[Column]):
+                 target_column: Column):
         self.target_column = target_column     
-        self.feature_columns = feature_columns
            
     @classmethod   
     @abstractmethod
     def from_dict(cls, 
-                  target_column: Column, 
-                  feature_columns: list[Column],
+                  target_column: Column,
                   **kwargs: dict):
+        """Class constructor that uses the dictionary to build strategy.
+        
+        Uses a part of the dictionary given to imputer constructor.
+
+        Args:
+            target_column (Column): Column that needs imputation by strategy.
+        """
         return
 
     @abstractmethod
@@ -66,6 +69,8 @@ class _BaseStrategy(ABC):
         pd.DataFrame : The Pandas DataFrame that contains the imputed column.
         """
         return
+    
+    
 
     # @abstractmethod
     # def impute_single(self, row: pd.Series) -> pd.Series:

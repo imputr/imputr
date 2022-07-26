@@ -14,6 +14,8 @@ class DataType(Enum):
     
     @classmethod
     def str_to_data_type(cls, string_name: str):
+        """Maps string to imputr DataType."""
+        
         str_mapping = {
             'cat': cls.CATEGORICAL,
             'cont': cls.CONTINUOUS
