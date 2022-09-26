@@ -60,39 +60,33 @@ class RandomForestStrategy(_MultivariateStrategy):
     feature_columns : list[Column]
         The predictor columns for the Random Forest to train on.
     
-    data_type : Union[str, DataType]
+    data_type : Union[str, DataType] (optional)
         The string or enum representation of the data_type.
         
-    n_estimators : int
+    n_estimators : int (optional)
         Number of decision trees used in the forest. Please refer ...
         
-    max_depth : int
+    max_depth : int (optional)
         Maximum depth of decision trees used in the forest. Please refer ...
     
-    min_sample_split: int
+    min_sample_split : int (optional)
         Minimum sample split of decision trees.  Please refer ...
     
-    min_samples_leaf: int
+    min_samples_leaf : int (optional)
         Minimum samples at leaves of decision trees. Please refer ...
     
-    min_weight_fraction_leaf : float
+    min_weight_fraction_leaf : float (optional)
         Minimum weight fractions of leaves of decision trees. Please refer...
         
-    max_features : Union[str, float]
+    max_features : Union[str, float] (optional)
         Max features used per decision tree. Can be fraction or identifier like `sqrt`.
         Please refer...
         
-    max_leaf_nodes : int
+    max_leaf_nodes : int (optional)
         Max number of nodes at leaves of the decision trees. Please refer...
-
-
-    Returns
-    -------
-        DataType : The data type as modeled by the imputr library.
-    
     
     """
-
+    
     supported_data_types: list = [
         DataType.CATEGORICAL,
         DataType.CONTINUOUS
@@ -100,9 +94,8 @@ class RandomForestStrategy(_MultivariateStrategy):
 
     def __init__(self, 
                  target_column: Column, 
-                 feature_columns: list[Column], 
-                 data_type: Union[str, DataType],
-                 n_estimators: int =64,
+                 feature_columns: list[Column],
+                 n_estimators: int = 64,
                  max_depth:int =8,
                  min_sample_split: int  = 512,
                  min_samples_leaf: int = 128,
@@ -110,30 +103,25 @@ class RandomForestStrategy(_MultivariateStrategy):
                  max_features: Union[str, float] = "sqrt",
                  max_leaf_nodes: int = 32
                  ):
-       super().__init__(target_column, feature_columns)
-       
-       if isinstance(data_type, str):
-           self.data_type = DataType.str_to_data_type(data_type)
-       else:
-           self.data_type = data_type
-       
-       if self.data_type not in self.supported_data_types:
-           raise ValueError(f'Data type {self.data_type} not supported by Random Forest.')
-       
-       self.n_estimators = n_estimators
-       self.max_depth = max_depth
-       self.min_sample_split = min_sample_split
-       self.min_samples_leaf = min_samples_leaf
-       self.min_weight_fraction_leaf = min_weight_fraction_leaf
-       self.max_features = max_features
-       self.max_leaf_nodes = max_leaf_nodes
+        super().__init__(target_column, feature_columns)
+        
+        if target_column.type not in self.supported_data_types:
+            raise ValueError(f'Data type {self.data_type} not supported by Random Forest.')
+
+        self.n_estimators = n_estimators
+        self.max_depth = max_depth
+        self.min_sample_split = min_sample_split
+        self.min_samples_leaf = min_samples_leaf
+        self.min_weight_fraction_leaf = min_weight_fraction_leaf
+        self.max_features = max_features
+        self.max_leaf_nodes = max_leaf_nodes
+        self.data_type = target_column.type
        
     @classmethod
     def from_dict(cls, 
                   target_column: Column, 
                   feature_columns: list[Column], 
                   **kwargs: dict):
-        
         return cls(
             target_column, 
             feature_columns, 
@@ -145,7 +133,6 @@ class RandomForestStrategy(_MultivariateStrategy):
             max_features = kwargs.get('max_features', 'sqrt'),
             max_leaf_nodes = kwargs.get('max_leaf_nodes', 32)
         )
-       
 
     def fit(self) -> None:
         """Fits RandomForest to make ready for imputation.
@@ -185,8 +172,11 @@ class RandomForestStrategy(_MultivariateStrategy):
         """
         
         feature_df_where_null = self._feature_df.iloc[self.target_column.null_indices]
-        predictions_ndarray = self.impute_strategy.predict(feature_df_where_null)
-        
+        if len(feature_df_where_null) == 0:
+            predictions_ndarray = np.empty(0)
+        else:
+            predictions_ndarray = self.impute_strategy.predict(feature_df_where_null)
+                    
         # Create data frame from predictions
         predictions_frame = pd.DataFrame(predictions_ndarray, columns=[self.target_column.name])
         predictions_frame['index'] = self.target_column.null_indices[0]
@@ -200,6 +190,6 @@ class RandomForestStrategy(_MultivariateStrategy):
         target_column_where_not_null_frame.set_index('index', inplace=True)
         
         # Union data together and return pd.Series containing fully imputed data.
-        concatenated_frame = pd.concat([target_column_where_not_null_frame, predictions_frame]).sort_index(axis=0)
+        concatenated_frame = pd.concat([target_column_where_not_null_frame, predictions_frame]) \
+            .sort_index(axis=0)
         return concatenated_frame[self.target_column.name]
-        

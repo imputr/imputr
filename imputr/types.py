@@ -5,8 +5,8 @@ class DataType(Enum):
     impute for and with.
 
     Currently only contains categorical and continuous.
-    Datetimes are considered continuous. Future releases may contain specific
-    enumertions for discrete, discrete-ordinal and a separate datetime type.
+    Future releases may contain specific enumertions for discrete, 
+    discrete-ordinal and a separate datetime type.
     """
 
     CATEGORICAL = (1,)

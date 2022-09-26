@@ -37,7 +37,7 @@ imputed_df = imputer.get_result()
 In short, the following steps are executed under the hood when the imputr code is run:
 
 1. Make a deep copy of the given dataframe
-2. Classify column types based on name, frequencies and data type into: continuous, categorical or datetime
+2. Classify column types based on name, frequencies and data type into continuous or categorical 
 3. Determine execution order for imputation. Start with the column with the least missing values as target and end at the column with most missing values.
 4. Determine random forest depths for each column with [heuristic](http://linktopseudocodereadthedocs.io) algorithm
 5. Apply missForest algorithm for all columns: iteratively take the target columns from the execution order, temporarily impute other (unimputed) columns with mean/mode and train random forest to impute target. Iterate until converged.

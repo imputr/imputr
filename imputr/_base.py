@@ -7,7 +7,7 @@ import pandas as pd
 from .strategy._base import _BaseStrategy
 from .strategy.multivariate import _MultivariateStrategy
 from .strategy import *
-from .strategy.univariate import _UnivariateStrategy
+from .strategy.univariate import _UnivariateStrategy, MeanStrategy
 
 from .column import *
 
@@ -72,9 +72,9 @@ class _BaseImputer(ABC):
         return [Column(data.iloc[:, index]) for index, item in enumerate(data.columns)]
 
     def determine_order(self, 
-                        predefined_order: dict, 
                         columns: list[Column],
-                        strategies: dict) -> list[Column]:
+                        strategies: dict[str, _BaseStrategy],
+                        predefined_order: dict[str, int] = None) -> list[Column]:
         """
         Determines the imputation order based on the predefined order, imputation
         strategy type and the number of missing values. The algorithm looks at predefined
@@ -83,31 +83,53 @@ class _BaseImputer(ABC):
 
         Parameters
         ----------
-        
-        order : dict
-            Dictionary of predefined order in which the imputation must be done.
+        columns : list[Column]
+            The columns that will undergo sequential imputation.
+            
+        strategies : dict[str, _BaseStrategy] 
+            Dictionary of of column names and their respective strategy that the 
+            imputer will use.
 
+        predefined_order : dict[str ,int] (optional)
+            Dictionary of predefined order in which the imputation must be done.
+            
         Returns
         -------
             List[Column] : returns list of Column references in imputation order.
         """
+        
         # TODO Implement assertion that order dict is incremental starting
         # from 0 as such: { 'column_x': 0, 'column_z': 1, 'column_y': 2 }
         
         if predefined_order is not None:
-            predefined_order_cols = list(filter(lambda x: x.name not in predefined_order.keys, columns))
+            columns_tup_with_ranking = []
+            for e in predefined_order.items():
+                tup = (next(filter(lambda x: x.name == e[0], columns)), e)
+                columns_tup_with_ranking.append(tup)
+            columns_tup_with_ranking = sorted(columns_tup_with_ranking, 
+                                                key=lambda x: x[1][1])
+            
+            columns_in_predefined_order = list(map(lambda x: x[0], columns_tup_with_ranking))
+                
+            columns = list(filter(lambda x: x.name not in predefined_order.keys(), columns))
+                
         else:
-            predefined_order_cols = []
+            columns_in_predefined_order = []
         
-        multivariate_strat_cols = filter(lambda x: isinstance(strategies[x.name],_MultivariateStrategy), 
-                                        columns)
-        multivariate_strat_cols = sorted(multivariate_strat_cols, key=attrgetter('missing_value_count'))
+        multivariate_strat_cols = filter(lambda x: 
+                isinstance(strategies[x.name], _MultivariateStrategy), columns)
+        multivariate_strat_cols = sorted(multivariate_strat_cols, 
+                                         key=attrgetter('missing_value_count'),
+                                         reverse=True)
         
-        univariate_strat_cols = filter(lambda x: isinstance(strategies[x.name], _UnivariateStrategy), 
-                                    columns)
-        univariate_strat_cols = sorted(univariate_strat_cols, key=attrgetter('missing_value_count'))
+        univariate_strat_cols = filter(lambda x: 
+                isinstance(strategies[x.name], _UnivariateStrategy), columns)
         
-        return predefined_order_cols + multivariate_strat_cols + univariate_strat_cols
+        univariate_strat_cols = sorted(univariate_strat_cols, 
+                                       key=attrgetter('missing_value_count'),
+                                       reverse=True)
+        
+        return columns_in_predefined_order + univariate_strat_cols + multivariate_strat_cols 
 
     def str_to_strategy(self, string_name: str) -> _BaseStrategy:
         """Returns the strategy class type for given string abbreviation.
@@ -124,11 +146,10 @@ class _BaseImputer(ABC):
         
         
         str_to_strategy_mapping = {
-            'rf': RandomForestStrategy
-            # 'mean': MeanStrategy,
+            'rf': RandomForestStrategy,
+            'mean': MeanStrategy,
             # 'median': MedianStrategy,
             # 'mode': ModeStrategy,
-            
         }
         
         if string_name not in str_to_strategy_mapping:

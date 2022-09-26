@@ -1,6 +1,6 @@
 from email.errors import NonPrintableDefect
 from typing import Union
-from pandas.core.dtypes.common import is_numeric_dtype, is_object_dtype, is_string_dtype, is_categorical_dtype, is_datetime64_any_dtype
+from pandas.core.dtypes.common import is_numeric_dtype, is_object_dtype, is_string_dtype, is_categorical_dtype
 import numpy as np
 import pandas as pd
 import warnings
@@ -27,12 +27,13 @@ class Column:
     _imputed_data: pd.Series
     _le: LabelEncoder
 
-    def __init__(self, data: pd.Series):
+    def __init__(self, data: pd.Series, data_type: Union[str, DataType] = None):
         self.data = data
         self.name = data.name
         self.missing_value_count = self._count_number_of_missing_values(data)
         self.unique_value_count = self._count_number_of_unique_values(data)
-        self.type = self._infer_data_type(data, self.missing_value_count)
+        self.type = self._infer_data_type(data, self.unique_value_count) \
+            if data_type is None else data_type
         self.average = self._compute_average(data, self.type)
         self._imputed_data = None
         self._le = LabelEncoder() if self.type is DataType.CATEGORICAL else None
@@ -56,7 +57,7 @@ class Column:
     def imputed_data(self, column_values: pd.Series) -> None:
         """Sets the imputed_data property.
         
-        # TODO: assert right dimension and non-nullness of the given imputed data.
+        TODO: assert right dimension and non-nullness of the given imputed data.
 
         Parameters
         ----------
@@ -113,6 +114,8 @@ class Column:
         ----------
         column : pd.Series
             The column for which the data type must be determined.
+        unique_value_count : int 
+            Number of unique values of in the column data.
 
         Returns
         -------
@@ -129,11 +132,6 @@ class Column:
             is_string_dtype(column_data.dtype),
             is_categorical_dtype(column_data.dtype)}:
             return DataType.CATEGORICAL
-        
-        if is_datetime64_any_dtype(column_data.dtype):
-            # This will be mapped onto native datetime data type in future releases
-            return DataType.CONTINUOUS
-        
         else:
             raise TypeError(f'Column data type \'{column_data.dtype}\' is not supported.')
 
