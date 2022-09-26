@@ -1,6 +1,6 @@
-# ImputR documentation
+# Imputr documentation
 
-←—— This will be a our logo ——>
+![logo](https://github.com/imputr/imputr/blob/release-v.0.1/docs/docs/imputr-logo-horizontal.svg?raw=true)
 
 # ****🎯 What is ImputR?****
 
