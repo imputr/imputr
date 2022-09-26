@@ -1,6 +1,6 @@
 # Imputr documentation
 
-![logo](https://github.com/imputr/imputr/blob/release-v.0.1/docs/docs/imputr-logo-horizontal.svg?raw=true)
+![logo](https://github.com/imputr/imputr/blob/release-v.0.1/docs/docs/_static/imputr-logo-horizontal.svg?raw=true)
 
 # ****🎯 What is ImputR?****
 
