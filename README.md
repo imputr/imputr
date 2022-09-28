@@ -1,4 +1,4 @@
-# Imputr documentation
+
 <p align="center">
   <img src="https://github.com/imputr/imputr/blob/release-v.0.1/docs/docs/_static/imputr-logo-horizontal.svg?raw=true" width="800">
 </p>
