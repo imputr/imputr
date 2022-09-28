@@ -1,13 +1,13 @@
 # Imputr documentation
 
-<img src="https://github.com/imputr/imputr/blob/release-v.0.1/docs/docs/_static/imputr-logo-horizontal.svg?raw=true" width="800">
+<img src="https://github.com/imputr/imputr/blob/release-v.0.1/docs/docs/_static/imputr-logo-horizontal.svg?raw=true" width="600" align="center">
 
 # ****🎯 What is Imputr?****
 
 ImputR is an open-source library that allows users to stably impute tabular data sets with ML-based and conventional techniques. It is designed to have an extremely simple, yet extensive API, making it possible for users of all levels and archetypes to deploy the library in their workflows. 
 
 
-<img src="https://github.com/imputr/imputr/blob/release-v.0.1/docs/docs/_static/imputation.gif?raw=true" width="800">
+<img src="https://github.com/imputr/imputr/blob/release-v.0.1/docs/docs/_static/imputation.gif?raw=true" width="600"  align="center">
  
  
 # 🚀 Getting started
@@ -45,7 +45,7 @@ In short, the following steps are executed under the hood when the imputr code i
 5. Apply missForest algorithm for all columns: iteratively take the target columns from the execution order, temporarily impute other (unimputed) columns with mean/mode and train random forest to impute target. Iterate until converged.
 6. Log all imputations as tuple in new auxiliary column.
 
-<img src="https://github.com/imputr/imputr/blob/release-v.0.1/docs/docs/_static/autoimputer.gif?raw=true" width="800">
+<img src="https://github.com/imputr/imputr/blob/release-v.0.1/docs/docs/_static/autoimputer.gif?raw=true" width="500" align="center">
 
 To see what else be done with the AutoImputer API to customise its behaviour, reference our [documentation](http://readthedocs.io).
 
@@ -99,9 +99,7 @@ Multiple links to documentation:
 - column inference techniques
 
 blogs
-
 slack
-
 latest release
 
 more real world examples
