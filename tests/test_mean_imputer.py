@@ -1,27 +1,27 @@
 import pandas as pd
-from imputr.autoimputer import AutoImputer
+from imputr.meanimputer import MeanImputer
 from imputr.strategy.univariate import MeanStrategy
 from imputr.strategy.multivariate import RandomForestStrategy
 
 df = pd.read_csv('datasets/unittestsets/DigiDB_digimonlist_small.csv')
     
 def test_ctor():
-    imputer = AutoImputer(df)
+    imputer = MeanImputer(df)
     
     assert len(imputer.strategies.items()) == 3
-    assert isinstance(imputer.strategies['Lv50 Atk'], RandomForestStrategy)
-    assert isinstance(imputer.strategies['Attribute'], RandomForestStrategy)
-    assert isinstance(imputer.strategies['Stage'], RandomForestStrategy)
+    assert isinstance(imputer.strategies['Lv50 Atk'], MeanStrategy)
+    assert isinstance(imputer.strategies['Attribute'], MeanStrategy)
+    assert isinstance(imputer.strategies['Stage'], MeanStrategy)
 
     assert hasattr(imputer.strategies['Stage'], 'impute_strategy') is False
     assert hasattr(imputer.strategies['Lv50 Atk'], 'impute_strategy') is False
     
 
 def test_ctor_include_non_missing():   
-    imputer = AutoImputer(df, include_non_missing=True)
+    imputer = MeanImputer(df, include_non_missing=True)
     
     for col_name, strat in imputer.strategies.items():
-        assert isinstance(strat, RandomForestStrategy)
+        assert isinstance(strat, MeanStrategy)
         assert hasattr(strat, 'impute_strategy') is False
     
     
@@ -29,19 +29,19 @@ def test_ctor_include_non_missing():
 def test_ctr_strategies_with_dict_init():
     strategies = {
         'Number': {
-            'strategy':'mean'
+            'strategy':'rf'
             },
         'Lv50 Atk':  {
-            'strategy':'rf'
+            'strategy':'mean'
         }
     }
     
-    imputer = AutoImputer(data=df,strategies=strategies, include_non_missing=True)
+    imputer = MeanImputer(data=df,strategies=strategies, include_non_missing=True)
     
-    assert isinstance(imputer.strategies['Number'], MeanStrategy)
-    assert isinstance(imputer.strategies['Lv50 Atk'], RandomForestStrategy)
-    assert isinstance(imputer.strategies['Attribute'], RandomForestStrategy)
-    assert isinstance(imputer.strategies['Type'], RandomForestStrategy)
+    assert isinstance(imputer.strategies['Number'], RandomForestStrategy)
+    assert isinstance(imputer.strategies['Lv50 Atk'], MeanStrategy)
+    assert isinstance(imputer.strategies['Attribute'], MeanStrategy)
+    assert isinstance(imputer.strategies['Type'], MeanStrategy)
     
     assert hasattr(imputer.strategies['Number'], 'impute_strategy') is False
     assert hasattr(imputer.strategies['Lv50 Atk'], 'impute_strategy') is False
@@ -63,7 +63,7 @@ def test_ctor_with_dict_init_params():
         }
     }
     
-    imputer = AutoImputer(data=df,strategies=strategies)
+    imputer = MeanImputer(data=df,strategies=strategies)
     
     assert isinstance(imputer.strategies['Number'], MeanStrategy)
     assert isinstance(imputer.strategies['Lv50 Atk'], RandomForestStrategy)
@@ -77,7 +77,7 @@ def test_ctor_with_dict_init_params():
 def test_impute_columns():
     assert df.isnull().values.any() == True
     
-    imputer = AutoImputer(df, include_non_missing=True)
+    imputer = MeanImputer(df, include_non_missing=True)
     imputed_df = imputer.impute()
     
     assert imputed_df.isnull().values.any() == False
