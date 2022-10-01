@@ -1,4 +1,3 @@
-from email.errors import NonPrintableDefect
 from typing import Union
 from pandas.core.dtypes.common import is_numeric_dtype, is_object_dtype, is_string_dtype, is_categorical_dtype
 import numpy as np

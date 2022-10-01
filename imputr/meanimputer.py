@@ -2,26 +2,26 @@ from .column import *
 from ._base import _BaseImputer
 import pandas as pd
 from .strategy._base import _BaseStrategy
-from .strategy.multivariate import RandomForestStrategy
+from .strategy.univariate import MeanStrategy
 
-
-class AutoImputer(_BaseImputer):
-    """Automatic imputation class that implements the RandomForest strategy 
-    as main imputation method. Can be configured to implement other strategies
-    for specific columns and a custom imputation order.
+class MeanImputer(_BaseImputer):
+    """Simple imputation class that uses average imputation
+    as main imputation method. Uses mode for categorical and mean for continuous
+    columns. Can be configured to implement other strategies for specific columns 
+    and a custom imputation order.
     
     Parameters
     ----------
     data : pd.DataFrame
         The dataframe which undergoes imputation.
-    order : dict[int, str] (optional)
-        Dictionary of order index and column name. 
+    predefined_order : dict[int, str] (optional)
+        Dictionary of and column name order for imputation. 
         Keys must be incremental starting from zero: 0, 1, 2,
     strategies : dict[str, dict] (optional)
         Dictionary of column name and strategy kwargs.
     include_non_missing : bool (optional)
-        Flag to indicate whether columns without missing values need 
-        fitting of imputation strategies. Default is set to False.
+        Flag to indicate whether columns without missing value need fitting 
+        of strategies. Default is set to False.
         
     #TODO: Show code examples here
     """
@@ -42,6 +42,5 @@ class AutoImputer(_BaseImputer):
         self.included_columns = self._determine_list_of_included_columns(strategies, 
                                                                         predefined_order, 
                                                                         include_non_missing)
-        self.strategies = self._construct_strategies(RandomForestStrategy, strategies)
+        self.strategies = self._construct_strategies(MeanStrategy, strategies)
         self.ordered_columns = self._determine_order(self.included_columns, self.strategies, predefined_order)
-    
