@@ -3,5 +3,7 @@ API
 
 .. autosummary::
    :toctree: generated
-
-   lumache
+   :template: custom-module-template.rst
+   :recursive:
+   
+   imputr
