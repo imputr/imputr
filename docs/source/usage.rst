@@ -9,8 +9,7 @@ Installation
 To use Imputr, first install it using pip:
 
 .. code-block:: console
-
-$ pip install imputr
+   $ pip install imputr
 
 Using the AutoImputer
 ----------------
@@ -22,7 +21,7 @@ You import it and simply parse your Pandas DataFrame to initialize it.
 
 For example:
 
-..  code-block:: python
+.. code-block:: python
    from imputr import AutoImputer
    import pandas as pd
 

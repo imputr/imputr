@@ -1,10 +1,10 @@
-Welcome to Lumache's documentation!
+Welcome to Imputr's documentation!
 ===================================
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
+**Imputr** (/lu'make/) is an open-source library that allows users to stably impute 
+tabular data sets with ML-based and conventional techniques. 
+It is designed to have an extremely simple, yet extensive API, 
+making it possible for users of all levels and tasks to deploy the library in their workflows.
 
 Check out the :doc:`usage` section for further information, including
 how to :ref:`installation` the project.

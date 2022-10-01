@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath('../..'))  # Source code dir relative to this
 
 # -- Project information
 
-project = 'Lumache'
+project = 'Imputr'
 copyright = '2021, Graziella'
 author = 'Graziella'
 
@@ -21,6 +21,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.autoclass'
 ]
 
 intersphinx_mapping = {
