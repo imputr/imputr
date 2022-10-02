@@ -2,7 +2,7 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..'))  # Source code dir relative to this file
+sys.path.insert(0, os.path.abspath('../../imputr'))  # Source code dir relative to this file
 
 # -- Project information
 
@@ -20,7 +20,8 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'sphinx.ext.intersphinx'
+    'sphinx.ext.intersphinx',
+    'autoapi.extension'
 ]
 
 intersphinx_mapping = {
@@ -31,9 +32,13 @@ intersphinx_disabled_domains = ['std']
 
 templates_path = ['_templates']
 
-# -- Options for HTML output
+# # -- Options for HTML output
 
 html_theme = 'sphinx_rtd_theme'
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
+
+# Configds for Auto API
+autoapi_type = 'python'
+autoapi_dirs = ['../../imputr']

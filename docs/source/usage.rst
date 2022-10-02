@@ -9,19 +9,21 @@ Installation
 To use Imputr, first install it using pip:
 
 .. code-block:: console
+
    $ pip install imputr
 
 Using the AutoImputer
-----------------
+---------------------
 
 To impute a dataset, we recommend using the AutoImputer. 
 You import it and simply parse your Pandas DataFrame to initialize it.
 
-.. autoclass:: imputr.autoimputr.AutoImputer
+.. autoclass:: imputr.autoimputer.AutoImputer
 
 For example:
 
 .. code-block:: python
+
    from imputr import AutoImputer
    import pandas as pd
 
@@ -35,4 +37,4 @@ For example:
    imputed_df = imputer.impute()
       
 Customizing imputation behavior
-----------------
+-------------------------------
