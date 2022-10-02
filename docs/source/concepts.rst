@@ -1,9 +1,12 @@
 Concepts
 =======
 
-Imputers
+Imputer
 --------
 
-Strategies
-----------
+Strategy
+--------
+
+Column
+------
 
