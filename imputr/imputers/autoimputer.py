@@ -11,6 +11,19 @@ class AutoImputer(_BaseImputer):
     as main imputation method. Can be configured to implement other strategies
     for specific columns and a custom imputation order.
     
+    Attributes
+    ----------
+    predefined_order : dict[int, str] (optional)
+        Dictionary of column names and their order for imputation. 
+        Keys must be incremental starting from zero: 0, 1, 2
+        
+    strategies : dict[str, dict] (optional)
+        Dictionary of column name and strategy kwargs.
+    
+    predefined_datatypes : dict[str, Union[str, DataType]] (optional)
+        Dictionary that has column names as key and the data type as specified
+        in the Column constructor as value.
+    
     Parameters
     ----------
     data : pd.DataFrame
@@ -33,10 +46,9 @@ class AutoImputer(_BaseImputer):
 
     """
     
-    predefined_order: dict[str, int]
     strategies: dict[str, _BaseStrategy]
     ordered_columns: list[Column]
-    include_non_missing: bool
+    included_columns: list[Column]
     
     def __init__(self, 
                  data: pd.DataFrame,

@@ -34,8 +34,10 @@ class _BaseStrategy(ABC):
         
         Uses a part of the dictionary given to imputer constructor.
 
-        Args:
-            target_column (Column): Column that needs imputation by strategy.
+        Parameters
+        ----------
+        target_column : Column
+            Column that needs imputation by strategy.
         """
         return
     
@@ -45,9 +47,8 @@ class _BaseStrategy(ABC):
         """The imputer data types that are supported by 
         this imputation strategy.
 
-        Returns
-        -------
-        list[DataType] : List of imputr DataType enums.
+        Returns:
+            list[DataType] : List of imputr DataType enums.
         """
         return 
         
@@ -67,8 +68,7 @@ class _BaseStrategy(ABC):
 
         This method fills all missing values with its own strategy.
 
-        Returns
-        -------
-        pd.Series : The Pandas Series that contains that has the imputed column values.
+        Returns:
+            pd.Series : The Pandas Series that contains that has the imputed column values.
         """
         return
