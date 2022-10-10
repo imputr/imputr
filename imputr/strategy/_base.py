@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 import pandas as pd
-from ..types import DataType
+from ..domain import DataType
 
-from .. import Column
+from ..domain import Column
 
 class _BaseStrategy(ABC):
     """Abstract base class for strategy classes.

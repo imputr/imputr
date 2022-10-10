@@ -1,5 +1,5 @@
 import pandas as pd
-from imputr.autoimputer import AutoImputer
+from imputr.imputers.autoimputer import AutoImputer
 from imputr.strategy.univariate import MeanStrategy
 from imputr.strategy.multivariate import RandomForestStrategy
 

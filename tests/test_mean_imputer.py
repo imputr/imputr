@@ -1,7 +1,6 @@
 import pandas as pd
-from imputr.meanimputer import MeanImputer
-from imputr.strategy.univariate import MeanStrategy
-from imputr.strategy.multivariate import RandomForestStrategy
+from imputr import MeanImputer
+from imputr.strategy import MeanStrategy, RandomForestStrategy
 
 df = pd.read_csv('datasets/unittestsets/DigiDB_digimonlist_small.csv')
     

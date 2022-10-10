@@ -2,11 +2,13 @@ from abc import ABC, abstractmethod
 from operator import attrgetter
 
 import pandas as pd
-from .strategy._base import _BaseStrategy
-from .strategy.multivariate import _MultivariateStrategy
-from .strategy import *
-from .strategy.univariate import _UnivariateStrategy, MeanStrategy
-from .column import *
+
+from ..domain import Table, Column, DataType
+from ..strategy._base import _BaseStrategy
+from ..strategy.multivariate import _MultivariateStrategy
+from ..strategy import *
+from ..strategy.univariate import _UnivariateStrategy, MeanStrategy
+from typing import Union
 
 class _BaseImputer(ABC):
     """Abstract base class for imputer classes.
@@ -27,17 +29,25 @@ class _BaseImputer(ABC):
     include_non_missing : bool (optional)
         Flag to indicate whether columns without missing value need fitting 
         of strategies. Default is set to False.
+    predefined_datatypes : dict[str, Union[str, DataType]] (optional)
+        Dictionary that has column names as key and the data type as specified
+        in the Column constructor as value.
     """
     
+    table: Table
     predefined_order: dict[int, str]
     predefined_strategies: dict[str, dict]
     strategies: dict[str, _BaseStrategy]
     ordered_columns: list[Column]
     include_non_missing: bool
             
-    def __init__(self, data: pd.DataFrame):
-        self.data = data
-        self.columns = self._construct_columns(data)
+    def __init__(self,
+                 data: pd.DataFrame,
+                 predefined_datatypes: dict[str, Union[str, DataType]] = None):
+        self.table = Table(data, predefined_datatypes)
+        
+        
+        
 
     @abstractmethod
     def impute(self) -> pd.DataFrame:
@@ -48,21 +58,6 @@ class _BaseImputer(ABC):
             pd.DataFrame: Imputed dataset.
         """
         return
-    
-    def _construct_columns(self, data: pd.DataFrame) -> list[Column]:
-        """
-        Loops over dataframe columns to construct Column objects.
-
-        Parameters
-        ----------
-        data : pd.DataFrame 
-            The Pandas DataFrame that contains the columns.
-
-        Returns
-        -------
-            List[Column] : the list of constructed Column objects.
-        """
-        return [Column(data.iloc[:, index]) for index, item in enumerate(data.columns)]
 
     def _determine_order(self, 
                         columns: list[Column],
@@ -150,13 +145,13 @@ class _BaseImputer(ABC):
         """
         
         if include_non_missing == True:
-            return self.columns
+            return self.table.columns
         else:
             strategies = {} if strategies is None else strategies
             predefined_order = {} if predefined_order is None else predefined_order
             return list(filter(lambda x: x.missing_value_count > 0 
                    or x.name in strategies 
-                   or x.name in predefined_order, self.columns))
+                   or x.name in predefined_order, self.table.columns))
             
     def _construct_strategies(self, 
                         default_strategy: _BaseStrategy,
@@ -180,7 +175,7 @@ class _BaseImputer(ABC):
         constructed_strategies: dict[str, _BaseStrategy] = {}
         
         for col in self.included_columns:
-            feature_columns = list(filter(lambda x: x.name != col.name, self.columns))
+            feature_columns = list(filter(lambda x: x.name != col.name, self.table.columns))
             if col.name in strategies:
                 strategy_kwargs = strategies[col.name]
                 # Get strategy class to be constructed from string mapping
@@ -250,4 +245,4 @@ class _BaseImputer(ABC):
             col.imputed_data = imputed_series
             imputed_df[col.name] = imputed_series
         
-        return imputed_df.reindex(list(map(lambda x: x.name, self.columns)), axis=1)
+        return imputed_df.reindex(list(map(lambda x: x.name, self.table.columns)), axis=1)

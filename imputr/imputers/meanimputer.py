@@ -1,8 +1,8 @@
-from .column import *
+from ..domain import Column
 from ._base import _BaseImputer
 import pandas as pd
-from .strategy._base import _BaseStrategy
-from .strategy.univariate import MeanStrategy
+from ..strategy._base import _BaseStrategy
+from ..strategy.univariate import MeanStrategy
 
 class MeanImputer(_BaseImputer):
     """Simple imputation class that uses average imputation
