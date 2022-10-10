@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 import pandas as pd
-from ..domain import DataType
-
-from ..domain import Column
+from ..domain import DataType, Column
+from typing import Dict, List
 
 class _BaseStrategy(ABC):
     """Abstract base class for strategy classes.
@@ -29,7 +28,7 @@ class _BaseStrategy(ABC):
     @abstractmethod
     def from_dict(cls, 
                   target_column: Column,
-                  **kwargs: dict):
+                  **kwargs: Dict):
         """Class constructor that uses the dictionary to build strategy.
         
         Uses a part of the dictionary given to imputer constructor.
@@ -43,12 +42,12 @@ class _BaseStrategy(ABC):
     
     @property
     @abstractmethod
-    def supported_data_types(self) -> list[DataType]:
+    def supported_data_types(self) -> List[DataType]:
         """The imputer data types that are supported by 
         this imputation strategy.
 
         Returns:
-            list[DataType] : List of imputr DataType enums.
+            List[DataType] : List of imputr DataType enums.
         """
         return 
         

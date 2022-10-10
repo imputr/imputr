@@ -3,6 +3,7 @@ from ..domain import Column
 from ._base import _BaseStrategy
 import pandas as pd
 from ..domain import DataType
+from typing import Dict, List
 
 
 class _UnivariateStrategy(_BaseStrategy):
@@ -20,7 +21,7 @@ class _UnivariateStrategy(_BaseStrategy):
     @abstractmethod
     def from_dict(cls, 
                   target_column: Column,
-                  **kwargs: dict):
+                  **kwargs: Dict):
         return
     
 class MeanStrategy(_UnivariateStrategy):
@@ -29,7 +30,7 @@ class MeanStrategy(_UnivariateStrategy):
     and median for categoric columns.
     """
 
-    supported_data_types: list = [
+    supported_data_types: List = [
         DataType.CATEGORICAL,
         DataType.CONTINUOUS
         ]
@@ -42,7 +43,7 @@ class MeanStrategy(_UnivariateStrategy):
     @classmethod
     def from_dict(cls, 
                   target_column: Column,
-                  **kwargs: dict):
+                  **kwargs: Dict):
         return cls(target_column)
     
     def fit(self) -> None:

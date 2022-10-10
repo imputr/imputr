@@ -181,7 +181,7 @@ class Column:
             Union[str, float] : Either the mode or the mean of the library.
         """
         if type is DataType.CATEGORICAL:
-            # Picks first mode in the list of possible modes
+            # Picks first mode in the List of possible modes
             return str(column.mode().iloc[0])
         else:
             return float(column.mean())

@@ -1,5 +1,5 @@
 from abc import  abstractmethod
-from typing import Union
+from typing import Union, Dict, List
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 import pandas as pd
 from ..domain import Column, DataType
@@ -13,12 +13,12 @@ class _MultivariateStrategy(_BaseStrategy):
     strategies.
     """
     
-    feature_columns: list[Column]
+    feature_columns: List[Column]
     _feature_df: pd.DataFrame
     
     def __init__(self, 
                  target_column: Column, 
-                 feature_columns: list[Column]
+                 feature_columns: List[Column]
                  ):
         super().__init__(target_column)
         self.feature_columns = feature_columns
@@ -27,12 +27,12 @@ class _MultivariateStrategy(_BaseStrategy):
     @abstractmethod
     def from_dict(cls, 
                   target_column: Column, 
-                  feature_columns: list[Column],
-                  **kwargs: dict):
+                  feature_columns: List[Column],
+                  **kwargs: Dict):
         return
     
     def _create_df_from_num_encoded_feature_columns(self, feature_columns: 
-                                                list[Column]) -> pd.DataFrame:
+                                                List[Column]) -> pd.DataFrame:
         """Creates pd.DataFrame from pd.Series objects that contain
         the numerically encoded imputed data for the respective column.
 
@@ -54,7 +54,7 @@ class RandomForestStrategy(_MultivariateStrategy):
     target_column : Column
         The column which needs imputation.
     
-    feature_columns : list[Column]
+    feature_columns : List[Column]
         The predictor columns for the Random Forest to train on.
     
     data_type : Union[str, DataType] (optional)
@@ -84,14 +84,14 @@ class RandomForestStrategy(_MultivariateStrategy):
     
     """
     
-    supported_data_types: list = [
+    supported_data_types: List = [
         DataType.CATEGORICAL,
         DataType.CONTINUOUS
         ]
 
     def __init__(self, 
                  target_column: Column, 
-                 feature_columns: list[Column],
+                 feature_columns: List[Column],
                  n_estimators: int = 64,
                  max_depth:int =8,
                  min_sample_split: int  = 512,
@@ -117,8 +117,8 @@ class RandomForestStrategy(_MultivariateStrategy):
     @classmethod
     def from_dict(cls, 
                   target_column: Column, 
-                  feature_columns: list[Column], 
-                  **kwargs: dict):
+                  feature_columns: List[Column], 
+                  **kwargs: Dict):
         return cls(
             target_column, 
             feature_columns, 
