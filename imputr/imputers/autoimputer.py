@@ -1,8 +1,9 @@
-from ..domain import Column
+from ..domain import Column, DataType
 from ._base import _BaseImputer
 import pandas as pd
 from ..strategy._base import _BaseStrategy
 from ..strategy.multivariate import RandomForestStrategy
+from typing import Union
 
 
 class AutoImputer(_BaseImputer):
@@ -14,14 +15,21 @@ class AutoImputer(_BaseImputer):
     ----------
     data : pd.DataFrame
         The dataframe which undergoes imputation.
-    predefined_order : dict[str, int] (optional)
-        Dictionary of order index and column name. 
-        Keys must be incremental starting from zero: 0, 1, 2,
-    strategies : dict[str, dict] (optional)
+        
+    predefined_order : dict[int, str] (optional)
+        Dictionary of column names and their order for imputation. 
+        Keys must be incremental starting from zero: 0, 1, 2
+        
+    predefined_strategies : dict[str, dict] (optional)
         Dictionary of column name and strategy kwargs.
+    
+    predefined_datatypes : dict[str, Union[str, DataType]] (optional)
+        Dictionary that has column names as key and the data type as specified
+        in the Column constructor as value.
+        
     include_non_missing : bool (optional)
-        Flag to indicate whether columns without missing values need 
-        fitting of imputation strategies. Default is set to False.
+        Flag to indicate whether columns without missing value need fitting 
+        of strategies. Default is set to False.
 
     """
     
@@ -34,9 +42,10 @@ class AutoImputer(_BaseImputer):
                  data: pd.DataFrame,
                  predefined_order: dict[str, int] = None,
                  predefined_strategies: dict[str, dict] = None,
+                 predefined_datatypes: dict[str, Union[str, DataType]] = None,
                  include_non_missing: bool = False,
                  ):
-        super().__init__(data)
+        super().__init__(data, predefined_datatypes)
         self.included_columns = self._determine_list_of_included_columns(predefined_strategies, 
                                                                         predefined_order, 
                                                                         include_non_missing)

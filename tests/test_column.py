@@ -12,8 +12,7 @@ def test_ctor_cont():
     int_series = pd.Series([1,2,None,3])
     int_series.name = 'int_col'
 
-    with pytest.warns(UserWarning):
-        cont_col = Column(int_series)
+    cont_col = Column(int_series)
 
     assert cont_col.data.equals(int_series)
     assert cont_col.name == 'int_col'

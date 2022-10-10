@@ -48,9 +48,7 @@ class _MultivariateStrategy(_BaseStrategy):
 class RandomForestStrategy(_MultivariateStrategy):
     """
     Strategy implementation for RandomForest-based imputation.
-    
-    #TODO put actual sci-kit doc reference in this docstring
-    
+        
     Parameters
     ----------
     target_column : Column

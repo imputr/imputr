@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 from typing import Union
 from pandas.core.dtypes.common import is_numeric_dtype, is_object_dtype, is_string_dtype, is_categorical_dtype
-import warnings
 from sklearn.preprocessing import LabelEncoder
 from .types import DataType
 

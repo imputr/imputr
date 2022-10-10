@@ -18,9 +18,6 @@ class _BaseStrategy(ABC):
 
     index : int
         The column index of the target column.
-
-    self : object
-        A strategy object that implements an imputation strategy.
     """
 
     target_column: Column

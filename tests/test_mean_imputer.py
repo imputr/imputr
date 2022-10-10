@@ -26,7 +26,7 @@ def test_ctor_include_non_missing():
     
     
 def test_ctr_strategies_with_dict_init():
-    strategies = {
+    predefined_strategies = {
         'Number': {
             'strategy':'rf'
             },
@@ -35,7 +35,7 @@ def test_ctr_strategies_with_dict_init():
         }
     }
     
-    imputer = MeanImputer(data=df,strategies=strategies, include_non_missing=True)
+    imputer = MeanImputer(data=df,predefined_strategies=predefined_strategies, include_non_missing=True)
     
     assert isinstance(imputer.strategies['Number'], RandomForestStrategy)
     assert isinstance(imputer.strategies['Lv50 Atk'], MeanStrategy)
@@ -49,7 +49,7 @@ def test_ctr_strategies_with_dict_init():
 
 def test_ctor_with_dict_init_params():
 
-    strategies = {
+    predefined_strategies = {
         'Number': {
             'strategy':'mean'
             },
@@ -62,7 +62,7 @@ def test_ctor_with_dict_init_params():
         }
     }
     
-    imputer = MeanImputer(data=df,strategies=strategies)
+    imputer = MeanImputer(data=df,predefined_strategies=predefined_strategies)
     
     assert isinstance(imputer.strategies['Number'], MeanStrategy)
     assert isinstance(imputer.strategies['Lv50 Atk'], RandomForestStrategy)
