@@ -1,10 +1,9 @@
-from abc import ABC, abstractmethod
+from abc import  abstractmethod
 from typing import Union
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 import pandas as pd
-from .. import Column
+from ..domain import Column, DataType
 from ._base import _BaseStrategy
-from ..types import *
 import numpy as np
 
 
@@ -14,8 +13,8 @@ class _MultivariateStrategy(_BaseStrategy):
     strategies.
     """
     
-    _feature_df: pd.DataFrame
     feature_columns: list[Column]
+    _feature_df: pd.DataFrame
     
     def __init__(self, 
                  target_column: Column, 
@@ -49,9 +48,7 @@ class _MultivariateStrategy(_BaseStrategy):
 class RandomForestStrategy(_MultivariateStrategy):
     """
     Strategy implementation for RandomForest-based imputation.
-    
-    #TODO put actual sci-kit doc reference in this docstring
-    
+        
     Parameters
     ----------
     target_column : Column
@@ -165,7 +162,9 @@ class RandomForestStrategy(_MultivariateStrategy):
     
     def impute_column(self) -> pd.Series:
         """Imputes all null values with the Random Forest and unions with non-null values.
-
+    
+        TODO: Refactor this in general method for better reuse.
+        
         Returns
         -------
             pd.Series: fully imputed data column.
@@ -177,12 +176,12 @@ class RandomForestStrategy(_MultivariateStrategy):
         else:
             predictions_ndarray = self.impute_strategy.predict(feature_df_where_null)
                     
-        # Create data frame from predictions
+        # Create data frame from predictions (single column dataframe)
         predictions_frame = pd.DataFrame(predictions_ndarray, columns=[self.target_column.name])
         predictions_frame['index'] = self.target_column.null_indices[0]
         predictions_frame.set_index('index', inplace=True)
         
-        # Create data frame from existing non-null values
+        # Create data frame from existing non-null values (single column dataframe)
         target_where_not_null = self.target_column.data.iloc[self.target_column.non_null_indices]
         target_column_where_not_null_frame = pd.DataFrame(target_where_not_null.to_numpy(), 
                                                           columns=[self.target_column.name])

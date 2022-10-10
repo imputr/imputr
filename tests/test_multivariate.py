@@ -2,12 +2,11 @@
 Tests for multivariate strategies.
 """
 
-from wave import Wave_write
-from imputr.column import Column
-from imputr.strategy.multivariate import RandomForestStrategy
+from imputr.domain import Column
+from imputr.strategy import RandomForestStrategy
 import pandas as pd
 import numpy as np
-from imputr.types import DataType
+from imputr.domain import DataType
 from sklearn.utils.validation import check_is_fitted
 
 

@@ -1,7 +1,6 @@
 import pandas as pd
-from imputr._base import _BaseImputer
-from imputr.autoimputer import AutoImputer
-from imputr.strategy.univariate import MeanStrategy
+from imputr import AutoImputer
+from imputr.strategy import MeanStrategy
 import numpy as np
 
 df = pd.read_csv('datasets/unittestsets/DigiDB_digimonlist_small.csv')
@@ -9,7 +8,7 @@ df = pd.read_csv('datasets/unittestsets/DigiDB_digimonlist_small.csv')
 
 def test_construct_columns():
     imputer = AutoImputer(df)
-    columns = imputer.columns
+    columns = imputer.table.columns
     
     numbers_column = next(filter(lambda x: x.name == 'Number', columns))
 
@@ -23,10 +22,8 @@ def test_construct_columns():
     
 def test_determine_order_multivariate():
     imputer = AutoImputer(df, include_non_missing=True)
-    columns = imputer.columns
     
-    
-    order = imputer.determine_order(columns, imputer.strategies)
+    order = imputer.ordered_columns
     
     assert len(order) == 9
     assert order[0].name == 'Lv50 Atk'
@@ -34,25 +31,25 @@ def test_determine_order_multivariate():
 
 
 def test_determine_order_univariate_and_multivariate():
-    imputer = AutoImputer(df, include_non_missing=True)
-    columns = imputer.columns
-    numbers_column = next(filter(lambda x: x.name == 'Number', columns))
+    imputer = AutoImputer(df, include_non_missing=True, predefined_strategies={"Number": {"strategy":"mean"}})
     
-    imputer.strategies['Number'] = MeanStrategy(numbers_column)
-    
-    order = imputer.determine_order(columns, imputer.strategies)
+    order = imputer.ordered_columns
     
     assert len(order) == 9
     assert order[0].name == 'Number'
 
 def test_determine_order_univariate_and_multivariate_and_predefined_order():
-    imputer = AutoImputer(df, include_non_missing=True)
-    columns = imputer.columns
+    imputer = AutoImputer(df, 
+                          include_non_missing=True, 
+                          predefined_order={'Type': 1, 'Attribute' : 0},
+                          predefined_strategies={"Number": {"strategy":"mean"}}
+                          )
+    columns = imputer.table.columns
     numbers_column = next(filter(lambda x: x.name == 'Number', columns))
     
     imputer.strategies['Number'] = MeanStrategy(numbers_column)
     
-    order = imputer.determine_order(columns, imputer.strategies, {'Type': 1, 'Attribute' : 0})
+    order = imputer.ordered_columns
     
     assert len(order) == 9
     assert order[0].name == 'Attribute'

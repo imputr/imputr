@@ -3,8 +3,7 @@ Tests for Column data class.
 """
 
 import pytest
-from imputr import Column
-from imputr.types import DataType
+from imputr.domain import DataType, Column
 import pandas as pd
 from numpy.testing import assert_array_almost_equal
 import numpy as np
@@ -13,8 +12,7 @@ def test_ctor_cont():
     int_series = pd.Series([1,2,None,3])
     int_series.name = 'int_col'
 
-    with pytest.warns(UserWarning):
-        cont_col = Column(int_series)
+    cont_col = Column(int_series)
 
     assert cont_col.data.equals(int_series)
     assert cont_col.name == 'int_col'
@@ -61,3 +59,19 @@ def test_ctor_cat():
     assert_array_almost_equal(
         pd.Series([0,0,1,0]).to_numpy(),
         cont_col.numeric_encoded_imputed_data)
+    
+def test_ctor_predefined_datatype():
+    int_series = pd.Series([1,2,2,3])
+    int_series.name = 'int_col'
+    
+    cat_col = Column(int_series, DataType.CATEGORICAL)
+    
+    assert cat_col.type == DataType.CATEGORICAL
+
+def test_ctor_predefined_datatype_str():
+    int_series = pd.Series([1,2,2,3])
+    int_series.name = 'int_col'
+    
+    cat_col = Column(int_series, 'cat')
+    
+    assert cat_col.type == DataType.CATEGORICAL

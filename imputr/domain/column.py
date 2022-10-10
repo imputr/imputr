@@ -1,20 +1,19 @@
-from typing import Union
-from pandas.core.dtypes.common import is_numeric_dtype, is_object_dtype, is_string_dtype, is_categorical_dtype
 import numpy as np
 import pandas as pd
-import warnings
-
+from typing import Union
+from pandas.core.dtypes.common import is_numeric_dtype, is_object_dtype, is_string_dtype, is_categorical_dtype
 from sklearn.preprocessing import LabelEncoder
-
 from .types import DataType
 
 class Column:
-    """Data class that encapsulates the data and imputr-specific metadata of columns.
+    """Data class that encapsulates the data and imputr-specific metadata of a column.
 
     Parameters
     ----------
     data : pd.Series
         The Pandas Series that contains the column data.
+    data_type : Union[str, DataType] (optional)
+        The imputr DataType specified per string or DataType enum class.
     """
 
     data: pd.Series
@@ -24,18 +23,17 @@ class Column:
     unique_value_count: int
     average: Union[bool, str, float]
     _imputed_data: pd.Series
-    _le: LabelEncoder
+    _label_encoder: LabelEncoder
 
     def __init__(self, data: pd.Series, data_type: Union[str, DataType] = None):
         self.data = data
         self.name = data.name
         self.missing_value_count = self._count_number_of_missing_values(data)
         self.unique_value_count = self._count_number_of_unique_values(data)
-        self.type = self._infer_data_type(data, self.unique_value_count) \
-            if data_type is None else data_type
+        self.type = self._infer_data_type(data, data_type)
         self.average = self._compute_average(data, self.type)
         self._imputed_data = None
-        self._le = LabelEncoder() if self.type is DataType.CATEGORICAL else None
+        self._label_encoder = LabelEncoder() if self.type is DataType.CATEGORICAL else None
 
     @property
     def imputed_data(self) -> pd.Series:
@@ -81,7 +79,7 @@ class Column:
             # Uses property getter here. Original data may need average imputation first.
             return self.imputed_data
         
-        return self._le.fit_transform(self.imputed_data)
+        return self._label_encoder.fit_transform(self.imputed_data)
 
     @property
     def null_indices(self) -> np.ndarray:
@@ -106,24 +104,28 @@ class Column:
         return np.where(~pd.isnull(self.data))
     
         
-    def _infer_data_type(self, column_data: pd.Series, unique_values_count: int) -> DataType:
+    def _infer_data_type(self, column_data: pd.Series, data_type: Union[str, DataType] = None) -> DataType:
         """Helper method to infer the imputr-defined data type of a given column.
 
         Parameters
         ----------
         column : pd.Series
             The column for which the data type must be determined.
-        unique_value_count : int 
-            Number of unique values of in the column data.
+        data_type : Union[str, DataType]
+            String or DataType enum representing imputr data type.
 
         Returns
         -------
             DataType : The data type as modeled by the imputr library.
         """
         
+        if type(data_type) is str:
+            return DataType.str_to_data_type(data_type)
+
+        if type(data_type) is DataType:
+            return data_type
+        
         if is_numeric_dtype(column_data.dtype):
-            if unique_values_count <= 10:
-                warnings.warn(f'Detected just {unique_values_count} unique values for continuous column \'{column_data.name}\'.')
             return DataType.CONTINUOUS
         
         if True in {

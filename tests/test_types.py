@@ -3,7 +3,7 @@ Tests for types logic.
 """
 
 import pytest
-from imputr.types import DataType
+from imputr.domain import DataType
 
 def test_correct_mapping_cat():
     assert DataType.str_to_data_type('cat') == DataType.CATEGORICAL

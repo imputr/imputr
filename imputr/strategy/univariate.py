@@ -1,9 +1,8 @@
-from abc import ABC, abstractmethod
-
-from ..column import Column
+from abc import abstractmethod
+from ..domain import Column
 from ._base import _BaseStrategy
 import pandas as pd
-from ..types import DataType
+from ..domain import DataType
 
 
 class _UnivariateStrategy(_BaseStrategy):
