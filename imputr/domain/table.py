@@ -1,8 +1,8 @@
-from typing import Union
+from typing import Union, List
 import pandas as pd
-
 from ..domain import DataType
 from ..domain import Column
+
 
 class Table:
     """Data class that encapsulates the data and imputr-specific metadata of a table.
@@ -30,7 +30,7 @@ class Table:
     """
     
     data: pd.DataFrame
-    columns: list[Column]
+    columns: List[Column]
     
     def __init__(self,
                  data: pd.DataFrame,
