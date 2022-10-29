@@ -25,4 +25,3 @@ Contents
    concepts
    coreclass
    contributionjumpstart
-   apireference

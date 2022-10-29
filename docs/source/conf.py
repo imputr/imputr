@@ -2,13 +2,13 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..')) 
+sys.path.insert(0, os.path.abspath('../../..')) 
 
 # -- Project information
 
 project = 'Imputr'
-copyright = '2021, Graziella'
-author = 'Graziella'
+copyright = '2022'
+author = 'Rauf Akdemir'
 
 release = '0.1'
 version = '0.1.0'
