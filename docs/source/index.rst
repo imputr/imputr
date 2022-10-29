@@ -1,3 +1,5 @@
+:tocdepth: 2
+
 Welcome to Imputr's documentation!
 ===================================
 
@@ -17,6 +19,10 @@ Contents
 --------
 
 .. toctree::
-
+   :maxdepth: 2
+   
    usage
    concepts
+   coreclass
+   contributionjumpstart
+   apireference

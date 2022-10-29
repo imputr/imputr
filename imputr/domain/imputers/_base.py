@@ -93,7 +93,7 @@ class _BaseImputer(ABC):
             columns_tup_with_ranking = sorted(columns_tup_with_ranking, 
                                                 key=lambda x: x[1][1])
             
-            columns_in_predefined_order = list(map(lambda x: x[0], columns_tup_with_ranking))
+            columns_in_predefined_order = List(map(lambda x: x[0], columns_tup_with_ranking))
                 
             columns = list(filter(lambda x: x.name not in predefined_order.keys(), columns))
                 
@@ -220,9 +220,11 @@ class _BaseImputer(ABC):
                 raise ValueError(f'Strategy with \'{string_name}\' string representation is not defined.')
         return str_to_strategy_mapping[string_name]
 
-    
+
     def impute(self) -> pd.DataFrame:
         """Imputes dataframe with specified strategies.
+        
+        Overwrite this method if you wish to implement different imputation behavior.
 
         Returns:
             pd.DataFrame: imputed dataset.

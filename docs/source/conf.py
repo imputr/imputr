@@ -21,8 +21,9 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
-    # 'autoapi.extension',
-    'sphinx.ext.napoleon'
+    'sphinx.ext.napoleon',
+    'autoapi.extension',
+    # 'sphinxcontrib.fulltoc'
 ]
 
 intersphinx_mapping = {
@@ -37,12 +38,16 @@ templates_path = ['_templates']
 
 html_theme = 'furo'
 
+html_logo = "../_static/imputr-logo-horizontal.svg"
+
+autoapi_dirs = ['../../imputr']
+
+html_theme_options = {
+    # 'navigation_depth': 4
+}
+
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
-
-# Configs for Auto API
-autoapi_type = 'python'
-autoapi_dirs = ['../../imputr']
 
 # Configs for napoleon
 napoleon_use_ivar = True
