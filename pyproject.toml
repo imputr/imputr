@@ -1,0 +1,53 @@
+[project]
+name = "imputr"
+description = 'Imputing missing values in your data science.'
+readme = "README.md"
+license = { file="LICENSE" }
+maintainers = [
+  { name = "Rauf Akdemir", email = "rauf@gmail.com" },
+  { name = "Stijn IJzermans", email = "stijn@stijzermans.nl" },
+]
+urls.Homepage = "https://github.com/imputr/imputr"
+urls.Source = "https://github.com/imputr/imputr"
+urls.Tracker = "https://github.com/imputr/imputr/issues"
+requires-python = ">=3.7"
+dependencies = [
+  "numpy>=1.23.0",
+  "pandas>=1.4.3",
+]
+classifiers = [
+   'Development Status :: 2 - Pre-Alpha',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Science/Research',
+    'License :: OSI Approved :: Apache Software License',
+    'Operating System :: Unix',
+    'Operating System :: POSIX :: Linux',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+    'Topic :: Internet',
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+test = [
+  "pytest>=6",
+  "pytest-cov>=2.7",
+  "pytest-mock>=3.6",
+]
+
+[tool.hatch.version]
+path = "imputr/_constants.py"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+known_first_party = ["imputr"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
