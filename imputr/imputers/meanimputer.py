@@ -3,7 +3,7 @@ from ..domain import Column, DataType
 from ._base import _BaseImputer
 import pandas as pd
 from ..strategy._base import _BaseStrategy
-from ..strategy.univariate import MeanStrategy
+from ..strategy.mean import MeanStrategy
 from typing import Union, Dict, List
 
 class MeanImputer(_BaseImputer):

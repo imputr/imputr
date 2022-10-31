@@ -1,8 +1,6 @@
 Usage
 =====
 
-.. _installation:
-
 Installation
 ------------
 
@@ -17,8 +15,6 @@ Using the AutoImputer
 
 To impute a dataset, we recommend using the AutoImputer. 
 You import it and simply parse your Pandas DataFrame to initialize it.
-
-.. autoclass:: imputr.autoimputer.AutoImputer
 
 For example:
 
@@ -36,5 +32,4 @@ For example:
    # Retrieve fully imputed dataset
    imputed_df = imputer.impute()
       
-Customizing imputation behavior
--------------------------------
+To see how you can customize the behaviour of the imputer, check out the :ref:`Examples`.

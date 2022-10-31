@@ -2,7 +2,7 @@ from ..domain import Column, DataType
 from ._base import _BaseImputer
 import pandas as pd
 from ..strategy._base import _BaseStrategy
-from ..strategy.multivariate import RandomForestStrategy
+from ..strategy.randomforest import RandomForestStrategy
 from typing import Union, Dict, List
 
 

@@ -22,7 +22,7 @@ Contribute to the codebase
 --------------------------
 - **Report bugs**: inform us of things breaking or improvements you'd like to see by submitting an issues on
   our `issues`_ page. We recommend using our templates for the best way of handling your issue.
-- **Kill those bugs**: have a scroll through the bugs in our `issues`_ page. Anything tagged with `bug` and
+- **Smash those bugs**: have a scroll through the bugs in our `issues`_ page. Anything tagged with `bug` and
   `help wanted` is open to whoever wants to implement it.
 - **Implement a strategy**: implementing a strategy should be relatively easy to pick up as there are numerous examples. See this `strategy milestone`_ to find some strategy issues you may want to pick up.
 - **Implement an enhancement**: look through the GitHub issues for features. Anything tagged with "enhancement"
@@ -36,10 +36,8 @@ Help the science team
 
 The Imputr core science team is constantly trying to learn from Imputr's real-world behavior to best tailor it to the needs of its users.
 
-- **Share your results**: you may share your imputation's accuracy, runtime, memory and (privacy proof) dataset - 
-    and tell us what works and does not work for you.
-- **Propose research on ideas**: we are constnatly looking for new papers, strategies and heuristics to help us improve our imputations overall.
-    If you have an idea or you happen to find something, please let us know!
+- **Share your results**: you may share your imputation's accuracy, runtime, memory and (privacy proof) dataset. Tell us what works and does not work for you.
+- **Propose research on ideas**: we are constnatly looking for new papers, strategies and heuristics to help us improve our imputations overall. If you have an idea or you happen to find something, please let us know!
 
 .. _issues: https://github.com/imputr/imputr/issues
 .. _strategy milestone: https://github.com/imputr/imputr/milestone/1
@@ -59,7 +57,6 @@ Steps to get started
     $ git clone git@github.com:your_name_here/imputr.git
 
 3. Ensure poetry_ is installed.
-
 
 
 4. Install dependencies and start your virtualenv. Execute the following from within your local repository directory: ::

@@ -5,9 +5,9 @@ import pandas as pd
 
 from ..domain import Table, Column, DataType
 from ..strategy._base import _BaseStrategy
-from ..strategy.multivariate import _MultivariateStrategy
+from ..strategy.randomforest import _MultivariateStrategy
 from ..strategy import *
-from ..strategy.univariate import _UnivariateStrategy, MeanStrategy
+from ..strategy.mean import _UnivariateStrategy, MeanStrategy
 from typing import Union, Dict, List
 
 class _BaseImputer(ABC):
@@ -93,7 +93,7 @@ class _BaseImputer(ABC):
             columns_tup_with_ranking = sorted(columns_tup_with_ranking, 
                                                 key=lambda x: x[1][1])
             
-            columns_in_predefined_order = List(map(lambda x: x[0], columns_tup_with_ranking))
+            columns_in_predefined_order = list(map(lambda x: x[0], columns_tup_with_ranking))
                 
             columns = list(filter(lambda x: x.name not in predefined_order.keys(), columns))
                 
