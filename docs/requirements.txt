@@ -1,0 +1,4 @@
+sphinx-autoapi
+furo
+pandas
+scikit-learn

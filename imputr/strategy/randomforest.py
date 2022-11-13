@@ -150,9 +150,6 @@ class RandomForestStrategy(_MultivariateStrategy):
         target_column_where_not_null_frame['index'] = self.target_column.non_null_indices[0]
         target_column_where_not_null_frame.set_index('index', inplace=True)
         
-        # Cast to float if prediction is not float and target is float
-        # if predictions_frame[self]
-        
         # Union data together and return pd.Series containing fully imputed data.
         concatenated_frame = pd.concat([target_column_where_not_null_frame, predictions_frame]) \
             .sort_index(axis=0)

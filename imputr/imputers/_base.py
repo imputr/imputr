@@ -5,10 +5,10 @@ import pandas as pd
 
 from ..domain import Table, Column, DataType
 from ..strategy._base import _BaseStrategy
-from ..strategy.multivariate import _MultivariateStrategy
+from ..strategy.randomforest import _MultivariateStrategy
 from ..strategy import *
-from ..strategy.univariate import _UnivariateStrategy, MeanStrategy
-from typing import Union
+from ..strategy.mean import _UnivariateStrategy, MeanStrategy
+from typing import Union, Dict, List
 
 class _BaseImputer(ABC):
     """Abstract base class for imputer classes.
@@ -22,23 +22,23 @@ class _BaseImputer(ABC):
     data : pd.DataFrame
         The dataframe which undergoes imputation.
     
-    predefined_datatypes : dict[str, Union[str, DataType]] (optional)
+    predefined_datatypes : Dict[str, Union[str, DataType]] (optional)
         Dictionary that has column names as key and the data type as specified
         in the Column constructor as value.
 
     """
     
     table: Table
-    predefined_order: dict[str, int]
-    predefined_strategies: dict[str, dict]
+    predefined_order: Dict[str, int]
+    predefined_strategies: Dict[str, Dict]
     
-    strategies: dict[str, _BaseStrategy]
-    ordered_columns: list[Column]
+    strategies: Dict[str, _BaseStrategy]
+    ordered_columns: List[Column]
     include_non_missing: bool
             
     def __init__(self,
                  data: pd.DataFrame,
-                 predefined_datatypes: dict[str, Union[str, DataType]] = None):
+                 predefined_datatypes: Dict[str, Union[str, DataType]] = None):
         self.table = Table(data, predefined_datatypes)
         
         
@@ -55,9 +55,9 @@ class _BaseImputer(ABC):
         return
 
     def _determine_order(self, 
-                        columns: list[Column],
-                        predefined_strategies: dict[str, _BaseStrategy],
-                        predefined_order: dict[str, int] = None) -> list[Column]:
+                        columns: List[Column],
+                        predefined_strategies: Dict[str, _BaseStrategy],
+                        predefined_order: Dict[str, int] = None) -> List[Column]:
         """
         Determines the imputation order based on the predefined order, imputation
         strategy type and the number of missing values. The algorithm looks at predefined
@@ -67,22 +67,22 @@ class _BaseImputer(ABC):
 
         Parameters
         ----------
-        columns : list[Column]
+        columns : List[Column]
             The columns that will undergo sequential imputation.
             
-        predefined_strategies : dict[str, _BaseStrategy] 
+        predefined_strategies : Dict[str, _BaseStrategy] 
             Dictionary of of column names and their respective strategy that the 
             imputer will use.
 
-        predefined_order : dict[str, int] (optional)
+        predefined_order : Dict[str, int] (optional)
             Dictionary of predefined order in which the imputation must be done.
             
         Returns
         -------
-            List[Column] : returns list of Column references in imputation order.
+            List[Column] : returns List of Column references in imputation order.
         """
         
-        # TODO Implement assertion that order dict is incremental starting
+        # TODO Implement assertion that order Dict is incremental starting
         # from 0 as such: { 'column_x': 0, 'column_z': 1, 'column_y': 2 }
         
         if predefined_order is not None:
@@ -116,20 +116,20 @@ class _BaseImputer(ABC):
         return columns_in_predefined_order + univariate_strat_cols + multivariate_strat_cols 
 
     def _determine_list_of_included_columns(self, 
-                                           predefined_strategies: dict[str, dict] = None, 
-                                           predefined_order: dict[str, int] = None, 
-                                           include_non_missing: bool = False) -> list[Column]:
-        """Determines list of columns that need fitting of imputation strategies.
+                                           predefined_strategies: Dict[str, Dict] = None, 
+                                           predefined_order: Dict[str, int] = None, 
+                                           include_non_missing: bool = False) -> List[Column]:
+        """Determines List of columns that need fitting of imputation strategies.
         
         By default includes all columns that have missing value, a defined strategy or defined order.
         
         Parameters
         ----------
-        predefined_datatypes : dict[str, Union[str, DataType]] (optional)
+        predefined_datatypes : Dict[str, Union[str, DataType]] (optional)
             Dictionary that has column names as key and the data type as specified
             in the Column constructor as value.
             
-        predefined_order : dict[int, str] (optional)
+        predefined_order : Dict[int, str] (optional)
             Contains predefined order as defined in public API. Defaults to None
             
         include_non_missing : bool
@@ -137,7 +137,7 @@ class _BaseImputer(ABC):
             Defaults to None.
 
         Returns:
-            list[Column]: List of columns that need strategy fitting.
+            List[Column]: List of columns that need strategy fitting.
         """
         
         if include_non_missing == True:
@@ -151,22 +151,22 @@ class _BaseImputer(ABC):
             
     def _construct_strategies(self, 
                         default_strategy: _BaseStrategy,
-                        predefined_strategies: dict[str, dict] = None
-                        ) -> dict[str, _BaseStrategy]:
+                        predefined_strategies: Dict[str, Dict] = None
+                        ) -> Dict[str, _BaseStrategy]:
         """Constructs strategies to prepare for fitting and imputation.
         
         Parameters
         ----------
-        strategies : dict[str, dict] (optional)
-            Contains name - dict as defined in public API. Defaults to None.
+        strategies : Dict[str, Dict] (optional)
+            Contains name - Dict as defined in public API. Defaults to None.
 
         Returns:
-            dict[str, _BaseStrategy]: Contains strategy for each column.
+            Dict[str, _BaseStrategy]: Contains strategy for each column.
         """
         if predefined_strategies is None: 
             predefined_strategies = {}
         
-        constructed_strategies: dict[str, _BaseStrategy] = {}
+        constructed_strategies: Dict[str, _BaseStrategy] = {}
         
         for col in self.included_columns:
             feature_columns = list(filter(lambda x: x.name != col.name, self.table.columns))
@@ -220,9 +220,11 @@ class _BaseImputer(ABC):
                 raise ValueError(f'Strategy with \'{string_name}\' string representation is not defined.')
         return str_to_strategy_mapping[string_name]
 
-    
+
     def impute(self) -> pd.DataFrame:
         """Imputes dataframe with specified strategies.
+        
+        Overwrite this method if you wish to implement different imputation behavior.
 
         Returns:
             pd.DataFrame: imputed dataset.

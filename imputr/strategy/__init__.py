@@ -1,2 +1,2 @@
-from .multivariate import RandomForestStrategy
-from .univariate import MeanStrategy
+from .randomforest import RandomForestStrategy
+from .mean import MeanStrategy
