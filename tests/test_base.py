@@ -44,10 +44,6 @@ def test_determine_order_univariate_and_multivariate_and_predefined_order():
                           predefined_order={'Type': 1, 'Attribute' : 0},
                           predefined_strategies={"Number": {"strategy":"mean"}}
                           )
-    columns = imputer.table.columns
-    numbers_column = next(filter(lambda x: x.name == 'Number', columns))
-    
-    imputer.strategies['Number'] = MeanStrategy(numbers_column)
     
     order = imputer.ordered_columns
     
