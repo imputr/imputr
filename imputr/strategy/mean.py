@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from ..domain import Column
 from ._base import _UnivariateStrategy
 import pandas as pd
