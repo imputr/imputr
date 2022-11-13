@@ -1,35 +1,17 @@
 from abc import abstractmethod
 from ..domain import Column
-from ._base import _BaseStrategy
+from ._base import _UnivariateStrategy
 import pandas as pd
 from ..domain import DataType
+from typing import Dict, List
 
-
-class _UnivariateStrategy(_BaseStrategy):
-    """
-    The abstract class that contains the interface for univariate imputation
-    strategies.
-    """
-
-    def __init__(self, 
-                 target_column: Column
-                 ):
-        super().__init__(target_column)
-        
-    @classmethod   
-    @abstractmethod
-    def from_dict(cls, 
-                  target_column: Column,
-                  **kwargs: dict):
-        return
-    
 class MeanStrategy(_UnivariateStrategy):
     """
     Mean imputation strategy. Imputes calculated mean for numeric columns
     and median for categoric columns.
     """
 
-    supported_data_types: list = [
+    supported_data_types: List = [
         DataType.CATEGORICAL,
         DataType.CONTINUOUS
         ]
@@ -42,7 +24,7 @@ class MeanStrategy(_UnivariateStrategy):
     @classmethod
     def from_dict(cls, 
                   target_column: Column,
-                  **kwargs: dict):
+                  **kwargs: Dict):
         return cls(target_column)
     
     def fit(self) -> None:

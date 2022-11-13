@@ -43,7 +43,8 @@ class Column:
         the _imputed_data value as average-based imputed pd.Series (mode for
         discrete and mean for continuous) and returns it.
 
-        Returns:
+        Returns
+        -------
             pd.Series: imputed data of the Column object.
         """
         if self._imputed_data is None:
@@ -70,9 +71,10 @@ class Column:
         
         Transforms categorical data types to incrementally labeled integer data.
         Calls the property getter of self._imputed_data.
-
-        Returns:
-            pd.Series: _description_
+       
+        Returns
+        -------
+            pd.Series: series containing in imputed data in numerically encoded form.
         """
 
         if self.type is DataType.CONTINUOUS:
@@ -86,8 +88,9 @@ class Column:
         """Returns np.ndarray of indexes where a null value is found.
         
         Mutually exclusive with the non_null_indices property.
-
-        Returns:
+        
+        Returns
+        -------
             np.ndarray: indexes where a null value is found
         """
         return np.where(pd.isnull(self.data))
@@ -97,8 +100,9 @@ class Column:
         """Returns np.ndarray of indexes where a non-null value is found.
         
         Mutually exclusive with the null_indices property.
-
-        Returns:
+        
+        Returns
+        -------
             np.ndarray: indexes where a non-null value is found
         """
         return np.where(~pd.isnull(self.data))
@@ -177,7 +181,7 @@ class Column:
             Union[str, float] : Either the mode or the mean of the library.
         """
         if type is DataType.CATEGORICAL:
-            # Picks first mode in the list of possible modes
+            # Picks first mode in the List of possible modes
             return str(column.mode().iloc[0])
         else:
             return float(column.mean())
