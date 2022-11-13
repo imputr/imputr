@@ -42,6 +42,7 @@ Contents
    
    usage
    concepts
+   examples
    coreclass
    contributionjumpstart
-   examples
+   
