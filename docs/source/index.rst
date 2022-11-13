@@ -5,8 +5,8 @@ Welcome to Imputr's documentation!
    :target: https://badge.fury.io/py/imputr
    :alt: PyPI version
  
-.. image:: https://github.com/kearnz/autoimpute/actions/workflows/build.yml/badge.svg
-   :target: https://github.com/kearnz/autoimpute/actions
+.. image:: https://github.com/imputr/imputr/actions/workflows/release.yml/badge.svg
+   :target: https://github.com/imputr/imputr/actions
    :alt: Build Status
  
 .. image:: https://readthedocs.org/projects/imputr/badge/?version=latest
