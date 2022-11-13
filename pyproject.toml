@@ -2,7 +2,7 @@
 [tool.poetry]
 name = "imputr"
 version = "0.1.0"
-description = 'Imputing missing values in your data science.'
+description = 'Python library for easy and fast ML-based & conventional imputation techniques.'
 readme = "README.md"
 license =  "Apache-2.0"
 authors = [
