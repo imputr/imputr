@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
-
 import pandas as pd
-
+from ..domain import DataType, Column
+from typing import Dict, List
 
 class _BaseStrategy(ABC):
     """Abstract base class for strategy classes.
@@ -12,22 +11,42 @@ class _BaseStrategy(ABC):
 
     Parameters
     ----------
-    data : pd.DataFrame
-        This is the Pandas DataFrame that contains the tabular dataset which
-        undergoes imputation. This can be used to configure the imputer.
-
-    index : int
-        The column index of the target column.
-
-    self : object
-        A strategy object that implements an imputation strategy.
+    target_column : Column
+        The column that undergoes imputation by the strategy.
     """
 
-    index: int
+    target_column: Column
 
-    def __init__(self, data, index):
-        self.data = data
-        self.index = index
+    def __init__(self, target_column: Column):
+        self.target_column = target_column     
+           
+    @classmethod   
+    @abstractmethod
+    def from_dict(cls, 
+                  target_column: Column,
+                  **kwargs: Dict):
+        """Class constructor that uses the dictionary to build strategy.
+        
+        Uses a part of the dictionary given to imputer constructor.
+
+        Parameters
+        ----------
+        target_column : Column
+            Column that needs imputation by strategy.
+        """
+        return
+    
+    @property
+    @abstractmethod
+    def supported_data_types(self) -> List[DataType]:
+        """The imputer data types that are supported by 
+        this imputation strategy.
+
+        Returns:
+            List[DataType] : List of imputr DataType enums.
+        """
+        return 
+        
 
     @abstractmethod
     def fit(self) -> None:
@@ -39,63 +58,69 @@ class _BaseStrategy(ABC):
         return
 
     @abstractmethod
-    def impute_column(self, table: pd.DataFrame) -> pd.DataFrame:
-        """Runs imputer strategy on the full column of a table.
+    def impute_column(self) -> pd.Series:
+        """Runs imputer strategy on the target column.
 
         This method fills all missing values with its own strategy.
 
-        Parameters
-        ----------
-        data : pd.DataFrame
-            A Pandas DataFrame that needs imputation for the target column for
-            which this imputation strategy is trained. Expects no missing values in the
-            non-target columns.
-
-        Returns
-        -------
-        pd.DataFrame : The Pandas DataFrame that contains the imputed column.
+        Returns:
+            pd.Series : The Pandas Series that contains that has the imputed column values.
         """
         return
-
+    
+class _MultivariateStrategy(_BaseStrategy):
+    """
+    The abstract class that contains the interface for multivariate imputation
+    strategies.
+    """
+    
+    feature_columns: List[Column]
+    _feature_df: pd.DataFrame
+    
+    def __init__(self, 
+                 target_column: Column, 
+                 feature_columns: List[Column]
+                 ):
+        super().__init__(target_column)
+        self.feature_columns = feature_columns
+        
+    @classmethod   
     @abstractmethod
-    def impute_single(self, row: pd.Series) -> pd.Series:
-        """Runs imputer strategy on a single row of a table.
-
-        This method fills the missing value with its own strategy.
-
-        Parameters
-        ----------
-        data : pd.DataFrame
-            A Pandas DataFrame that needs imputation for the target column for
-            which this imputation strategy is trained. Expects no missing values in the
-            non-target columns.
-
-        Returns
-        -------
-        pd.Series : The Pandas Series that contains the imputed value.
-        """
+    def from_dict(cls, 
+                  target_column: Column, 
+                  feature_columns: List[Column],
+                  **kwargs: Dict):
         return
+    
+    def _create_df_from_num_encoded_feature_columns(self, feature_columns: 
+                                                List[Column]) -> pd.DataFrame:
+        """Creates pd.DataFrame from pd.Series objects that contain
+        the numerically encoded imputed data for the respective column.
 
-    @abstractmethod
-    def info(self) -> str:
-        """Gets textual description of the imputer strategy.
-
-        Returns
-        -------
-        str : Textual description of the imputer strategy.
+        Returns:
+            pd.DataFrame : joined dataframe of num-encoded and imputed data.
         """
+        
+        df_dict = {}
+        for col in feature_columns:
+            df_dict[col.name] = col.numeric_encoded_imputed_data
+        return pd.DataFrame(df_dict)
+    
+class _UnivariateStrategy(_BaseStrategy):
+    """
+    The abstract class that contains the interface for univariate imputation
+    strategies.
+    """
+
+    def __init__(self, 
+                 target_column: Column
+                 ):
+        super().__init__(target_column)
+        
+    @classmethod   
+    @abstractmethod
+    def from_dict(cls, 
+                  target_column: Column,
+                  **kwargs: Dict):
         return
-
-    @property
-    @abstractmethod
-    def strategy_identifier(self) -> str:
-        """Abbreviation of strategy name that functions as identifier.
-
-        Returns
-        -------
-        str : Identifier of strategy.
-        """
-        return self._strategy_abbrevation
-
-    def __str__(self) -> str:
-        return self._strategy_name
+    
