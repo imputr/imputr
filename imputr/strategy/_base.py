@@ -12,12 +12,8 @@ class _BaseStrategy(ABC):
 
     Parameters
     ----------
-    data : pd.DataFrame
-        This is the Pandas DataFrame that contains the tabular dataset which
-        undergoes imputation. This can be used to configure the imputer.
-
-    index : int
-        The column index of the target column.
+    target_column : Column
+        The column that undergoes imputation by the strategy.
     """
 
     target_column: Column
@@ -67,8 +63,35 @@ class _BaseStrategy(ABC):
 
         This method fills all missing values with its own strategy.
 
-        Returns
-        -------
-        pd.Series : The Pandas Series that contains that has the imputed column values.
+        Returns:
+            pd.Series : The Pandas Series that has the imputed column values.
         """
         return
+
+        Returns:
+            pd.DataFrame : joined dataframe of num-encoded and imputed data.
+        """
+        
+        df_dict = {}
+        for col in feature_columns:
+            df_dict[col.name] = col.numeric_encoded_imputed_data
+        return pd.DataFrame(df_dict)
+    
+class _UnivariateStrategy(_BaseStrategy):
+    """
+    The abstract class that contains the interface for univariate imputation
+    strategies.
+    """
+
+    def __init__(self, 
+                 target_column: Column
+                 ):
+        super().__init__(target_column)
+        
+    @classmethod   
+    @abstractmethod
+    def from_dict(cls, 
+                  target_column: Column,
+                  **kwargs: Dict):
+        return
+    

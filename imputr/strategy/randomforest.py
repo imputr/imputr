@@ -3,47 +3,9 @@ from typing import Union, Dict, List
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 import pandas as pd
 from ..domain import Column, DataType
-from ._base import _BaseStrategy
+from ._base import _MultivariateStrategy
 import numpy as np
 
-
-class _MultivariateStrategy(_BaseStrategy):
-    """
-    The abstract class that contains the interface for multivariate imputation
-    strategies.
-    """
-    
-    feature_columns: List[Column]
-    _feature_df: pd.DataFrame
-    
-    def __init__(self, 
-                 target_column: Column, 
-                 feature_columns: List[Column]
-                 ):
-        super().__init__(target_column)
-        self.feature_columns = feature_columns
-        
-    @classmethod   
-    @abstractmethod
-    def from_dict(cls, 
-                  target_column: Column, 
-                  feature_columns: List[Column],
-                  **kwargs: Dict):
-        return
-    
-    def _create_df_from_num_encoded_feature_columns(self, feature_columns: 
-                                                List[Column]) -> pd.DataFrame:
-        """Creates pd.DataFrame from pd.Series objects that contain
-        the numerically encoded imputed data for the respective column.
-
-        Returns:
-            pd.DataFrame : joined dataframe of num-encoded and imputed data.
-        """
-        
-        df_dict = {}
-        for col in feature_columns:
-            df_dict[col.name] = col.numeric_encoded_imputed_data
-        return pd.DataFrame(df_dict)
 
 class RandomForestStrategy(_MultivariateStrategy):
     """
@@ -187,6 +149,9 @@ class RandomForestStrategy(_MultivariateStrategy):
                                                           columns=[self.target_column.name])
         target_column_where_not_null_frame['index'] = self.target_column.non_null_indices[0]
         target_column_where_not_null_frame.set_index('index', inplace=True)
+        
+        # Cast to float if prediction is not float and target is float
+        # if predictions_frame[self]
         
         # Union data together and return pd.Series containing fully imputed data.
         concatenated_frame = pd.concat([target_column_where_not_null_frame, predictions_frame]) \
