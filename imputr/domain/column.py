@@ -26,8 +26,8 @@ class Column:
     _label_encoder: LabelEncoder
 
     def __init__(self, data: pd.Series, data_type: Union[str, DataType] = None):
-        self.data = data
         self.name = data.name
+        self.data = self._cast_data_if_necessary(data, data_type)
         self.missing_value_count = self._count_number_of_missing_values(data)
         self.unique_value_count = self._count_number_of_unique_values(data)
         self.type = self._infer_data_type(data, data_type)
@@ -107,6 +107,16 @@ class Column:
         """
         return np.where(~pd.isnull(self.data))
     
+    def _cast_data_if_necessary(self, data: pd.Series, data_type: Union[str, DataType] = None) -> pd.Series:
+        """If given data is numeric as defined in pandas' isnumeric function,
+        and given datatype is categorical, map to pandas object.
+        """
+        
+        if type(data_type) is str and DataType.str_to_data_type(data_type) is DataType.CATEGORICAL:
+            if is_numeric_dtype(data):
+                return data.astype('string')
+            
+        return data
         
     def _infer_data_type(self, column_data: pd.Series, data_type: Union[str, DataType] = None) -> DataType:
         """Helper method to infer the imputr-defined data type of a given column.

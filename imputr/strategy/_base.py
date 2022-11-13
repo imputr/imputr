@@ -11,12 +11,8 @@ class _BaseStrategy(ABC):
 
     Parameters
     ----------
-    data : pd.DataFrame
-        This is the Pandas DataFrame that contains the tabular dataset which
-        undergoes imputation. This can be used to configure the imputer.
-
-    index : int
-        The column index of the target column.
+    target_column : Column
+        The column that undergoes imputation by the strategy.
     """
 
     target_column: Column
