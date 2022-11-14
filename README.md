@@ -26,17 +26,18 @@ pip install imputr
 Here is an example of the simplest usage of the AutoImputer (our recommended workflow for newbies and intermediates), which by default automatically imputes the missing values for all columns with a modern version of the [missForest](https://arxiv.org/pdf/1105.0828.pdf) algorithm.
 
 ```python
-from imputr.autoimputer import AutoImputer
+from imputr import AutoImputer
 import pandas as pd
 
-# Import dataset into Pandas DataFrame
+# Import dataset with missing values
 df = pd.read_csv("example.csv")
 
-# Initialize AutoImputer with data - set exec_now=False to delay imputation 
+# Initialize AutoImputer with data 
 imputer = AutoImputer(data=df)
 
-# Retrieve imputed dataset from AutoImputer object
-imputed_df = imputer.get_result()
+# Retrieve fully imputed dataset
+imputed_df = imputer.impute()
+
 ```
 
 Here you can see an example of how the AutoImputer works internally.
